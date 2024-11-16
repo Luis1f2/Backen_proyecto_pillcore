@@ -6,15 +6,28 @@ class AddPatient {
   }
 
   async execute(patientData) {
-    const { nombre, edad, direccion, telefono } = patientData;
+    const { nombre, edad, direccion, telefono, enfermedades_pers, alergias, grupo_sanguineo, peso, diagnostico_reciente } = patientData;
 
     if (!nombre || !edad) {
       throw new Error('Missing required fields: nombre and edad');
     }
 
-    const patient = new Patient(null, nombre, edad, direccion, telefono);
+    const patient = new Patient(
+      null,
+      nombre,
+      edad,
+      direccion,
+      telefono,
+      enfermedades_pers,
+      alergias,
+      grupo_sanguineo,
+      peso,
+      diagnostico_reciente
+    );
+
     return await this.patientRepository.save(patient);
   }
 }
 
 module.exports = AddPatient;
+
