@@ -45,14 +45,11 @@ class UserServices {
   }
 
   async deleteUser(userId) {
-    // Validar si el usuario existe
     await this._validateUserExists(userId);
-
-    // Eliminar el usuario
     return await this.userRepository.delete(userId);
   }
 
-  // Método privado para verificar si un usuario existe
+  
   async _validateUserExists(userId) {
     const user = await this.userRepository.findById(userId);
     if (!user) {

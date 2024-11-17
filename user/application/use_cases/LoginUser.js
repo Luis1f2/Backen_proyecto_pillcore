@@ -5,22 +5,23 @@ class LoginUser {
     this.userRepository = userRepository;
   }
 
-  async execute(email, password) {
-    const user = await this.userRepository.findByEmail(email);
+  async execute(direccion_Email, password) {
+    const user = await this.userRepository.findByEmail(direccion_Email);
     if (!user) {
-      throw new Error('User not found'); // Podrías usar códigos HTTP para un mejor manejo
+      throw new Error('User not found');
     }
-    
+
+    // Validar la contraseña
     const isPasswordValid = await bcrypt.compare(password, user.contraseña);
     if (!isPasswordValid) {
       throw new Error('Invalid password');
     }
 
-    // Retorna solo los datos que necesitas, no toda la entidad
+   
     return {
-      id: user.id,
+      id: user.id_usuario, 
       nombre: user.nombre,
-      correo: user.correo,
+      direccion_Email: user.direccion_Email
     };
   }
 }
