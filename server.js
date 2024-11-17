@@ -1,7 +1,17 @@
 const fs = require('fs');
 const https = require('https');
+const cors = requiere('cors')
 const express = require('express');
 const { Server } = require('socket.io');
+
+const corsOptions = {
+  origin: ['http://localhost:8083', 'https://mi-frontend.com'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
+
 
 
 const authRoutes = require('./user/infrastructure/routes/authRoutes');
@@ -10,6 +20,7 @@ const medicineRoutes = require('./medicine/infrastructure/routes/medicineRoutes'
 
 
 const app = express();
+app.use(cors(corsOptions));
 app.use(express.json());
 
 
