@@ -1,12 +1,11 @@
 class GetAllMedicines {
-    constructor(medicineRepository) {
-      this.medicineRepository = medicineRepository;
-    }
-  
-    async execute() {
-      return await this.medicineRepository.findAll();
-    }
+  constructor(medicineRepository) {
+    this.medicineRepository = medicineRepository;
   }
-  
-  module.exports = GetAllMedicines;
-  
+
+  async execute() {
+    return await this.medicineRepository.findAll();
+  }
+}
+
+module.exports = GetAllMedicines;

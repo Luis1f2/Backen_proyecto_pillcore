@@ -3,18 +3,14 @@ class UpdatePatient {
     this.patientRepository = patientRepository;
   }
 
-  async execute(patientId, updateData) {
-    const patient = await this.patientRepository.findById(patientId);
+  async execute(id, patientData) {
+    const patient = await this.patientRepository.findById(id);
+
     if (!patient) {
-      throw new Error('Patient not found');
+      throw new Error('Paciente no encontrado');
     }
 
-    const updatedPatient = {
-      ...patient,
-      ...updateData,
-    };
-
-    return await this.patientRepository.update(patientId, updatedPatient);
+    return await this.patientRepository.update(id, patientData);
   }
 }
 

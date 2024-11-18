@@ -1,6 +1,6 @@
 const fs = require('fs');
 const https = require('https');
-const cors = requiere('cors')
+const cors = require('cors')
 const express = require('express');
 const { Server } = require('socket.io');
 

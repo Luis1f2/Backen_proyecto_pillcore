@@ -1,18 +1,22 @@
-const Medicine = require('../../domain/entities/Medicine');
-
 class AddMedicine {
   constructor(medicineRepository) {
     this.medicineRepository = medicineRepository;
   }
 
   async execute(medicineData) {
-    const { id_medicamento_rfid, nombre, descripcion, dosis, frecuencias, notas_adicionales } = medicineData;
-
-    if (!id_medicamento_rfid || !nombre) {
-      throw new Error('Missing required fields: id_medicamento_rfid and nombre');
-    }
-
-    const medicine = new Medicine(null, id_medicamento_rfid, nombre, descripcion, dosis, frecuencias, notas_adicionales);
+    const Medicine = require('../../domain/entities/medicine');
+    const medicine = new Medicine(
+      null, 
+      medicineData.id_paciente,
+      medicineData.id_medicamento_rfid,
+      medicineData.nombre_medicamento,
+      medicineData.horario_medicamento,
+      medicineData.fecha_inicio,
+      medicineData.fecha_final,
+      medicineData.dosis,
+      medicineData.frecuencias,
+      medicineData.notas_adicionales
+    );
     return await this.medicineRepository.save(medicine);
   }
 }
