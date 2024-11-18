@@ -2,25 +2,29 @@ const AddPatient = require('../../application/use_cases/AddPatient');
 const DeletePatient = require('../../application/use_cases/DeletePatient');
 const GetPatientByIdOrName = require('../../application/use_cases/GetPatientByIdOrName');
 const UpdatePatient = require('../../application/use_cases/UpdatePatient');
+const GetAllPatients = require('../../application/use_cases/GetAllPatients'); // Estaba faltando
 const PatientRepository = require('../../domain/repositories/PatientRepository');
+
 const patientRepository = new PatientRepository();
 
+// Crear un paciente
 exports.addPatient = async (req, res) => {
   try {
     const addPatient = new AddPatient(patientRepository);
-    const id_paciente = await addPatient.execute(req.body);
+    const id_paciente = await addPatient.execute(req.body); // Aquí pasa los datos al caso de uso
     res.status(201).json({ message: 'Paciente creado exitosamente', id_paciente });
   } catch (err) {
     res.status(500).json({ message: 'Error al crear el paciente', error: err.message });
   }
 };
 
+// Obtener todos los pacientes
 exports.getAllPatients = async (req, res) => {
   try {
     const getAllPatients = new GetAllPatients(patientRepository);
     const patients = await getAllPatients.execute();
 
-    if (patients.length === 0) {
+    if (!patients || patients.length === 0) {
       return res.status(404).json({ message: 'No hay pacientes registrados' });
     }
 
@@ -30,9 +34,15 @@ exports.getAllPatients = async (req, res) => {
   }
 };
 
+// Eliminar un paciente
 exports.deletePatient = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: 'El ID del paciente es obligatorio' });
+    }
+
     const deletePatient = new DeletePatient(patientRepository);
     const deleted = await deletePatient.execute(id);
 
@@ -46,9 +56,15 @@ exports.deletePatient = async (req, res) => {
   }
 };
 
+// Obtener un paciente por ID o nombre
 exports.getPatientByIdOrName = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: 'Se requiere un ID o nombre para buscar el paciente' });
+    }
+
     const getPatientByIdOrName = new GetPatientByIdOrName(patientRepository);
     const result = await getPatientByIdOrName.execute(id);
 
@@ -62,9 +78,15 @@ exports.getPatientByIdOrName = async (req, res) => {
   }
 };
 
+// Actualizar un paciente
 exports.updatePatient = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: 'El ID del paciente es obligatorio para actualizar' });
+    }
+
     const updatePatient = new UpdatePatient(patientRepository);
     const updated = await updatePatient.execute(id, req.body);
 

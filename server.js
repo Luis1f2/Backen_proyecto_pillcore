@@ -11,9 +11,6 @@ const corsOptions = {
   credentials: true
 };
 
-
-
-
 const authRoutes = require('./user/infrastructure/routes/authRoutes');
 const patientRoutes = require('./patient/infrastructure/routes/patientRoutes');
 const medicineRoutes = require('./medicine/infrastructure/routes/medicineRoutes');
