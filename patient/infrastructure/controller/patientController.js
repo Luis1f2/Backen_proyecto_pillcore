@@ -1,6 +1,6 @@
 const AddPatient = require('../../application/use_cases/AddPatient');
 const DeletePatient = require('../../application/use_cases/DeletePatient');
-const GetPatientByIdOrName = require('../../application/use_cases/GetPatientByIdOrName');
+const GetPatientById = require('../../application/use_cases/GetPatientById');
 const UpdatePatient = require('../../application/use_cases/UpdatePatient');
 const GetAllPatients = require('../../application/use_cases/GetAllPatients'); // Estaba faltando
 const PatientRepository = require('../../domain/repositories/PatientRepository');
@@ -56,23 +56,18 @@ exports.deletePatient = async (req, res) => {
   }
 };
 
-// Obtener un paciente por ID o nombre
-exports.getPatientByIdOrName = async (req, res) => {
+// Obtener un paciente por ID 
+exports.getPatientById = async (req, res) => {
   try {
     const { id } = req.params;
+    const getPatientById = new GetPatientById(patientRepository);
+    const patient = await getPatientById.execute(id);
 
-    if (!id) {
-      return res.status(400).json({ message: 'Se requiere un ID o nombre para buscar el paciente' });
-    }
-
-    const getPatientByIdOrName = new GetPatientByIdOrName(patientRepository);
-    const result = await getPatientByIdOrName.execute(id);
-
-    if (!result) {
+    if (!patient) {
       return res.status(404).json({ message: 'Paciente no encontrado' });
     }
 
-    res.status(200).json(result);
+    res.status(200).json(patient);
   } catch (err) {
     res.status(500).json({ message: 'Error al obtener el paciente', error: err.message });
   }

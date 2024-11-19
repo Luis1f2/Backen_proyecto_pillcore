@@ -55,12 +55,12 @@ class PatientRepository {
     const [result] = await db.execute(query, values);
     return result.affectedRows > 0; // Devuelve `true` si se actualizó correctamente
   }
-
   async findById(patientId) {
     const query = `SELECT * FROM Paciente WHERE id_paciente = ?`;
     const [rows] = await db.execute(query, [patientId]);
-    return rows.length > 0 ? rows[0] : null; // Devuelve el paciente si existe
+    return rows.length > 0 ? rows[0] : null;
   }
+  
 
   async delete(patientId) {
     const query = `DELETE FROM Paciente WHERE id_paciente = ?`;

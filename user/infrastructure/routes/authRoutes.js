@@ -8,6 +8,7 @@ router.get('/users', authController.getAllUsers);
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.put('/update/:id', authController.update);
+router.get('/user/:id', authController.getUserById);
 router.delete('/delete/:id', authController.delete);
 router.get('/profile', verifyToken, async (req, res) => {
     try {
