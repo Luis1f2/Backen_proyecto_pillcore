@@ -6,27 +6,26 @@ class RegisterUser {
     this.userRepository = userRepository;
   }
 
-  async execute(data) {
-    const { nombre, edad, direccion_Email, contraseña, telefono } = data;
+  async execute(userData) {
+    const { nombre, año_nacimiento, direccion_Email, contraseña, telefono } = userData;
 
     if (!nombre || !direccion_Email || !contraseña) {
-      throw new Error('Missing required fields: nombre, direccion_Email, or contraseña');
+      throw new Error('Faltan campos requeridos');
     }
 
-    const existingUser = await this.userRepository.findByEmail(direccion_Email);
-    if (existingUser) {
-      throw new Error('Email already in use');
+    if (contraseña.length < 8) {
+      throw new Error('La contraseña debe tener al menos 8 caracteres');
     }
 
     const hashedPassword = await bcrypt.hash(contraseña, 10);
 
     const user = new User(
-      null, // ID lo asigna la base de datos
+      null, // id será generado automáticamente por la base de datos
       nombre,
-      edad || null,
+      telefono,
       direccion_Email,
-      hashedPassword,
-      telefono || null
+      año_nacimiento,
+      hashedPassword
     );
 
     return await this.userRepository.save(user);

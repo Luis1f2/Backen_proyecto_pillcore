@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const RegisterUser = require('../../application/use_cases/RegisterUser');
 const LoginUser = require('../../application/use_cases/LoginUser');
 const UpdateUser = require('../../application/use_cases/UpdateUser');
@@ -8,24 +9,48 @@ const UserRepository = require('../../domain/repositories/UserRepository');
 const userRepository = new UserRepository();
 
 exports.register = async (req, res) => {
-  const registerUser = new RegisterUser(userRepository);
   try {
-    const user = await registerUser.execute(req.body);
-    res.status(201).json({ message: 'User registered successfully', user });
+    const { nombre, año_nacimiento, direccion_Email, contraseña, telefono } = req.body;
+
+    if (!nombre || !direccion_Email || !contraseña) {
+      return res.status(400).json({ message: 'Faltan campos requeridos' });
+    }
+
+    // Validaciones adicionales
+    if (contraseña.length < 8) {
+      return res.status(400).json({ message: 'La contraseña debe tener al menos 8 caracteres' });
+    }
+
+    const hashedPassword = await bcrypt.hash(contraseña, 10);
+
+    const user = await userRepository.save({
+      nombre,
+      año_nacimiento: parseInt(año_nacimiento),
+      direccion_Email,
+      contraseña: hashedPassword,
+      telefono,
+    });
+
+    const { contraseña: _, ...userWithoutPassword } = user;
+
+    res.status(201).json({ message: 'Usuario registrado exitosamente', user: userWithoutPassword });
   } catch (err) {
-    res.status(500).json({ message: 'Error registering user', error: err.message });
+    console.error(err);
+    res.status(500).json({ message: 'Error al registrar usuario' });
   }
 };
 
 exports.login = async (req, res) => {
   const loginUser = new LoginUser(userRepository);
   try {
-    const user = await loginUser.execute(req.body.direccion_Email, req.body.contraseña);
-    res.status(200).json({ message: 'Login successful', user });
+    const { direccion_Email, contraseña } = req.body; // Usar direccion_Email y contraseña
+    const { user, token } = await loginUser.execute(direccion_Email, contraseña); // Pasar direccion_Email al caso de uso
+    res.status(200).json({ message: 'Login successful', user, token });
   } catch (err) {
     res.status(401).json({ message: 'Invalid email or password', error: err.message });
   }
 };
+
 
 exports.update = async (req, res) => {
   const { id } = req.params;
