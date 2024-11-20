@@ -14,6 +14,8 @@ const corsOptions = {
 const authRoutes = require('./user/infrastructure/routes/authRoutes');
 const patientRoutes = require('./patient/infrastructure/routes/patientRoutes');
 const medicineRoutes = require('./medicine/infrastructure/routes/medicineRoutes');
+const notificationRoutes = require('./notifications/infrastructure/routes/notificationRoutes');
+const alertRoutes = require('./alert/infrastructure/routes/alertRoutes');
 
 
 const app = express();
@@ -36,6 +38,8 @@ const io = new Server(server);
 app.use('/auth', authRoutes);
 app.use('/patients', patientRoutes);
 app.use('/medicines', medicineRoutes);
+app.use('/notifications', notificationRoutes);
+app.use('/alerts', alertRoutes);
 
 
 io.on('connection', (socket) => {
